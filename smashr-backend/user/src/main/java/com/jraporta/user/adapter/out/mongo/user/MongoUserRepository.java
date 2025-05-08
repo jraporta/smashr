@@ -15,6 +15,6 @@ public class MongoUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByEmailOrUsername(String emailOrUsername) {
-        return springMongoUserRepository.findByEmailOrUsername(emailOrUsername);
+        return springMongoUserRepository.findByEmailOrUsername(emailOrUsername).map(UserDocument::toDomain);
     }
 }

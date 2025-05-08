@@ -15,7 +15,7 @@ public class UserController {
 
     private final LoginUseCase loginUseCase;
 
-    @PostMapping("user/login")
+    @PostMapping("/user/login")
     public ResponseEntity<User> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(loginUseCase.login(request.getUsername(), request.getPassword()));
     }
