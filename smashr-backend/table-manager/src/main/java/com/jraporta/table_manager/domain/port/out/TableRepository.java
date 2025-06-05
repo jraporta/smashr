@@ -8,5 +8,6 @@ public interface TableRepository {
 
     List<Table> findAll();
     Table addTable(String name, String description);
+    Table findTable(String id);
 
 }

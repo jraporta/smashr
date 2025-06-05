@@ -5,10 +5,7 @@ import com.jraporta.table_manager.applicaton.usecase.TableUseCase;
 import com.jraporta.table_manager.domain.model.table.Table;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +18,11 @@ public class TableController {
     @GetMapping("/tables")
     public ResponseEntity<List<Table>> getAllTables() {
         return ResponseEntity.ok(tableUseCase.getAllTables());
+    }
+
+    @GetMapping("/tables/{id}")
+    public ResponseEntity<Table> getTable(@PathVariable String id) {
+        return ResponseEntity.ok(tableUseCase.getTable(id));
     }
 
     @PostMapping("tables")

@@ -22,4 +22,9 @@ public class TableService implements TableUseCase {
     public Table addTable(String name, String description) {
         return tableRepository.addTable(name, description);
     }
+
+    @Override
+    public Table getTable(String id) {
+        return tableRepository.findTable(id);
+    }
 }

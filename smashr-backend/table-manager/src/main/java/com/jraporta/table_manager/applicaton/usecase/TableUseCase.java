@@ -8,5 +8,6 @@ public interface TableUseCase {
 
     List<Table> getAllTables();
     Table addTable(String name, String description);
+    Table getTable(String id);
 
 }
