@@ -3,6 +3,7 @@ package com.jraporta.table_manager.adapter.in.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jraporta.table_manager.adapter.in.web.dto.request.AddTableRequest;
 import com.jraporta.table_manager.applicaton.usecase.TableUseCase;
+import com.jraporta.table_manager.domain.exception.TableNotFoundException;
 import com.jraporta.table_manager.domain.model.table.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,7 +44,9 @@ class TableControllerTest {
 
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(tableController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(tableController)
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
     }
 
     @ParameterizedTest
@@ -96,6 +99,17 @@ class TableControllerTest {
         mockMvc.perform(get("/tables/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(table), JsonCompareMode.STRICT));
+
+        verify(tableUseCase, times(1)).getTable(id);
+    }
+
+    @Test
+    void addTable_WhenNotValidIdProvided_ShouldReturnNotFoundResponse() throws Exception {
+        String id = "nonExistingId";
+        when(tableUseCase.getTable(id)).thenThrow(new TableNotFoundException("someErrorMessage"));
+
+        mockMvc.perform(get("/tables/{id}", id))
+                .andExpect(status().isNotFound());
 
         verify(tableUseCase, times(1)).getTable(id);
     }
