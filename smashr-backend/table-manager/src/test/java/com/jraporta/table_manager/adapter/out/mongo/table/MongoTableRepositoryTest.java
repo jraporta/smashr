@@ -24,8 +24,8 @@ class MongoTableRepositoryTest {
     @Test
     @DisplayName("findAll should map TableDocuments to Tables correctly")
     void findAll_ShouldMapTableDocumentsToTables() {
-        TableDocument doc1 = new TableDocument("id1", "name1");
-        TableDocument doc2 = new TableDocument("id2", "name2");
+        TableDocument doc1 = new TableDocument("id1", "name1", "description1");
+        TableDocument doc2 = new TableDocument("id2", "name2", "description2");
 
         when(springMongoTableRepository.findAll()).thenReturn(List.of(doc1, doc2));
 

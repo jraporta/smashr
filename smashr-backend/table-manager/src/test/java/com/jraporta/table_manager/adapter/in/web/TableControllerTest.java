@@ -1,6 +1,5 @@
 package com.jraporta.table_manager.adapter.in.web;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jraporta.table_manager.applicaton.usecase.TableUseCase;
 import com.jraporta.table_manager.domain.model.table.Table;
@@ -58,8 +57,8 @@ class TableControllerTest {
 
     static Stream<List<Table>> provideTableLists() {
         return Stream.of(
-                List.of(new Table("id1", "name1")),
-                List.of(new Table("id1", "name1"), new Table("id2", "name2")),
+                List.of(new Table("id1", "name1", "description1")),
+                List.of(new Table("id1", "name1", "description1"), new Table("id2", "name2", "description2")),
                 List.of()
         );
     }

@@ -38,8 +38,8 @@ class TableServiceTest {
 
     static Stream<List<Table>> provideTableLists() {
         return Stream.of(
-                List.of(new Table("id1", "name1")),
-                List.of(new Table("id1", "name1"), new Table("id2", "name2")),
+                List.of(new Table("id1", "name1", "description1")),
+                List.of(new Table("id1", "name1", "description1"), new Table("id2", "name2", "description2")),
                 List.of(),
                 null
         );

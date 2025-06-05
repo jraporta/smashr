@@ -14,8 +14,10 @@ public class TableDocument {
 
     private String name;
 
+    private String description;
+
     public Table toDomain() {
-        return new Table(id, name);
+        return new Table(id, name, description);
     }
 
 }
