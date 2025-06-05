@@ -86,4 +86,17 @@ class TableControllerTest {
 
         verify(tableUseCase, times(1)).addTable(name, description);
     }
+
+    @Test
+    void addTable_WhenValidIdProvided_ShouldReturnTable() throws Exception {
+        String id = "validId";
+        Table table = new Table(id, "name", "description");
+        when(tableUseCase.getTable(id)).thenReturn(table);
+
+        mockMvc.perform(get("/tables/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(content().json(mapper.writeValueAsString(table), JsonCompareMode.STRICT));
+
+        verify(tableUseCase, times(1)).getTable(id);
+    }
 }

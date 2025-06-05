@@ -62,4 +62,16 @@ class TableServiceTest {
 
         verify(tableRepository, times(1)).addTable(name, description);
     }
+
+    @Test
+    void getTable_IfIdIsValid_ShouldReturnTable() {
+        String id = "validId";
+        Table expectedResponse = new Table(id, "name", "description");
+
+        Mockito.when(tableRepository.findTable(id)).thenReturn(expectedResponse);
+
+        assertEquals(expectedResponse, tableService.getTable(id));
+
+        verify(tableRepository, times(1)).findTable(id);
+    }
 }

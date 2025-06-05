@@ -1,5 +1,6 @@
 package com.jraporta.table_manager.adapter.out.mongo.table;
 
+import com.jraporta.table_manager.domain.exception.TableNotFoundException;
 import com.jraporta.table_manager.domain.model.table.Table;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class MongoTableRepositoryTest {
@@ -61,5 +63,28 @@ class MongoTableRepositoryTest {
         assertEquals(entity.toDomain(), mongoTableRepository.addTable(name, description));
 
         verify(springMongoTableRepository, times(1)).save(any());
+    }
+
+    @Test
+    void findTable_IfExists_ShouldReturnTable() {
+        String id = "existingId";
+        TableDocument entity = new TableDocument(id, "name", "description");
+
+        when((springMongoTableRepository.findById(id))).thenReturn(Optional.of(entity));
+
+        assertEquals(entity.toDomain(), mongoTableRepository.findTable(id));
+
+        verify(springMongoTableRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void findTable_IfNotExists_ShouldThrowException() {
+        String id = "nonExistingId";
+
+        when((springMongoTableRepository.findById(id))).thenThrow(new TableNotFoundException("someErrorMessage"));
+
+        assertThrows(TableNotFoundException.class, () -> mongoTableRepository.findTable(id));
+
+        verify(springMongoTableRepository, times(1)).findById(id);
     }
 }
