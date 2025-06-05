@@ -17,4 +17,9 @@ public class TableService implements TableUseCase {
     public List<Table> getAllTables() {
         return tableRepository.findAll();
     }
+
+    @Override
+    public Table addTable(String name, String description) {
+        return tableRepository.addTable(name, description);
+    }
 }

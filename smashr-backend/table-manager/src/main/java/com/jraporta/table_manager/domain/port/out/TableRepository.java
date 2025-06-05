@@ -7,5 +7,6 @@ import java.util.List;
 public interface TableRepository {
 
     List<Table> findAll();
+    Table addTable(String name, String description);
 
 }

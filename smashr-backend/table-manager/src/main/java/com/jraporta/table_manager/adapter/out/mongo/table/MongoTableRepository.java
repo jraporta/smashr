@@ -17,4 +17,9 @@ public class MongoTableRepository implements com.jraporta.table_manager.domain.p
     public List<Table> findAll() {
         return springMongoTableRepository.findAll().stream().map(TableDocument::toDomain).toList();
     }
+
+    @Override
+    public Table addTable(String name, String description) {
+        return springMongoTableRepository.save(new TableDocument(null, name, description)).toDomain();
+    }
 }

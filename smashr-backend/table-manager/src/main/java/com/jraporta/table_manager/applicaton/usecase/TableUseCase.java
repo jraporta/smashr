@@ -7,5 +7,6 @@ import java.util.List;
 public interface TableUseCase {
 
     List<Table> getAllTables();
+    Table addTable(String name, String description);
 
 }
