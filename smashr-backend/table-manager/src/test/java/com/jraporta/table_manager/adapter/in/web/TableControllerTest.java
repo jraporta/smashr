@@ -1,20 +1,24 @@
 package com.jraporta.table_manager.adapter.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jraporta.table_manager.adapter.in.web.dto.request.AddTableRequest;
 import com.jraporta.table_manager.applicaton.usecase.TableUseCase;
 import com.jraporta.table_manager.domain.model.table.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.json.JsonCompareMode;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
@@ -63,4 +67,23 @@ class TableControllerTest {
         );
     }
 
+    @Test
+    void addTable_whenDataProvided_shouldReturnSavedTable() throws Exception {
+        String name = "name";
+        String description = "description";
+        Table savedTable = new Table(null, name, description);
+        AddTableRequest req = new AddTableRequest();
+        req.setName(name);
+        req.setDescription(description);
+
+        when(tableUseCase.addTable(name, description)).thenReturn(savedTable);
+
+        mockMvc.perform(post("/tables")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(req)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(mapper.writeValueAsString(savedTable), JsonCompareMode.STRICT));
+
+        verify(tableUseCase, times(1)).addTable(name, description);
+    }
 }

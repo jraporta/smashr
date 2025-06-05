@@ -3,6 +3,7 @@ package com.jraporta.table_manager.applicaton.usecase;
 import com.jraporta.table_manager.domain.model.table.Table;
 import com.jraporta.table_manager.domain.port.out.TableRepository;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class TableServiceTest {
@@ -43,5 +46,20 @@ class TableServiceTest {
                 List.of(),
                 null
         );
+    }
+
+    @Test
+    void addTable_shouldAddTable() {
+        String name = "name";
+        String description = "description";
+        Table savedTable = new Table(null, name, description);
+
+        Mockito.when(tableRepository.addTable(name, description)).thenReturn(savedTable);
+
+        Table response = tableService.addTable(name, description);
+
+        assertEquals(savedTable, response);
+
+        verify(tableRepository, times(1)).addTable(name, description);
     }
 }

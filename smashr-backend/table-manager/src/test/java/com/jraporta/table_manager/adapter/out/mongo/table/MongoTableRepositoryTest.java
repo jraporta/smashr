@@ -50,4 +50,16 @@ class MongoTableRepositoryTest {
         verify(springMongoTableRepository, times(1)).findAll();
     }
 
+    @Test
+    void addTable_ShouldAddTable_WhenDataProvided() {
+        String name = "name";
+        String description = "description";
+        TableDocument entity = new TableDocument(null, name, description);
+
+        when((springMongoTableRepository.save(any()))).thenReturn(entity);
+
+        assertEquals(entity.toDomain(), mongoTableRepository.addTable(name, description));
+
+        verify(springMongoTableRepository, times(1)).save(any());
+    }
 }
