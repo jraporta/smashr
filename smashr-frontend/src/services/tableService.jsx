@@ -10,6 +10,16 @@ async function getTables() {
     }
 }
 
+async function getTable(id) {
+    try {
+        const response = await API.get('/tables/' + id);
+        return mapToTable(response.data);
+    } catch (error) {
+        console.error('Failed to fetch table element:', error.response || error.message);
+        throw error;
+    }
+}
+
 function mapToTable(table) {
     return {
         ...table,
@@ -18,4 +28,7 @@ function mapToTable(table) {
     }
 }
 
-export default getTables;
+export const tableService = {
+    getTables,
+    getTable,
+}

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import getTables from "../services/tableService";
+import { tableService } from "../services/tableService";
 import TableList from "../components/TableList";
 
 const Tables = () => {
@@ -8,7 +8,7 @@ const Tables = () => {
 
     async function fetchTables() {
         try {
-            const data = await getTables();
+            const data = await tableService.getTables();
             setTables(data);
             console.log('Table list retrieved from API');
         } catch (err) {
