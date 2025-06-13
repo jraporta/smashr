@@ -19,6 +19,7 @@
     <modules>
         <module>user</module>
         <module>table-manager</module>
+        <module>game-manager</module>
     </modules>
 
 </project>
