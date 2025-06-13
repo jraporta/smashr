@@ -3,6 +3,7 @@ import Tables from "../pages/Tables";
 import Home from "../pages/Home";
 import Layout from "../pages/Layout";
 import Table from "../pages/Table";
+import TableSample from "../pages/TableSample";
 
 const AppRoutes = () => {
     return (
@@ -12,6 +13,7 @@ const AppRoutes = () => {
                     <Route path="/" element={<Home />} />
                     <Route path="/tables" element={<Tables />} />
                     <Route path="/tables/:id/:name" element={<Table />} />
+                    <Route path="/tables/sample" element={<TableSample />} />
                 </Route>
             </Routes>
         </BrowserRouter>
