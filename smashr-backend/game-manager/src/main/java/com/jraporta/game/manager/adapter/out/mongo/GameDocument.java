@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Set;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,9 +15,8 @@ public class GameDocument {
     @Id
     private String id;
     private String table;
-    private Set<String> players;
+    private GamePlayers players;
     private GameSchedule schedule;
-    private GameType type;
     private GameStatus status;
     private GameResult result;
 
@@ -28,7 +25,6 @@ public class GameDocument {
         this.table = game.getTable();
         this.players = game.getPlayers();
         this.schedule = game.getSchedule();
-        this.type = game.getType();
         this.status = game.getStatus();
         this.result = game.getResult();
     }
@@ -39,7 +35,6 @@ public class GameDocument {
                 .table(this.table)
                 .players(this.players)
                 .schedule(this.schedule)
-                .type(this.type)
                 .status(this.status)
                 .result(this.result)
                 .build();

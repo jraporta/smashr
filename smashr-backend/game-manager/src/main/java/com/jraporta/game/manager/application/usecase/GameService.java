@@ -22,7 +22,7 @@ public class GameService implements GameUseCase{
 
     @Override
     public Game createGame(String playerId, String table, LocalDateTime startDateTime, Duration duration) {
-        Game game = Game.createGame(playerId, table, startDateTime, duration);
+        Game game = Game.create(playerId, table, startDateTime, duration);
         return gameRepository.saveGame(game);
     }
 

@@ -1,5 +1,5 @@
 package com.jraporta.game.manager.domain.model.game;
 
 public enum GameStatus {
-    PENDING, ACTIVE, COMPLETED, CANCELLED
+    WAITING_FOR_PLAYERS, ACTIVE, COMPLETED
 }
