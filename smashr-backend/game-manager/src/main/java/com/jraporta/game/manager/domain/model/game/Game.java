@@ -1,6 +1,7 @@
 package com.jraporta.game.manager.domain.model.game;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.time.Duration;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@EqualsAndHashCode(of = {"id"})
 public class Game {
 
     private String id;
