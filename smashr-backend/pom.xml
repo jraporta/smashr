@@ -20,6 +20,7 @@
         <module>user</module>
         <module>table-manager</module>
         <module>game-manager</module>
+        <module>proto-definition</module>
     </modules>
 
 </project>
