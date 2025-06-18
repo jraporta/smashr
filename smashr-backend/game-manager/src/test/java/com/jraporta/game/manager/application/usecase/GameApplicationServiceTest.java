@@ -2,6 +2,7 @@ package com.jraporta.game.manager.application.usecase;
 
 import com.jraporta.game.manager.domain.model.game.Game;
 import com.jraporta.game.manager.domain.port.out.GameRepository;
+import com.jraporta.game.manager.domain.port.out.TableCheckerPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,6 +25,9 @@ class GameApplicationServiceTest {
 
     @Mock
     private GameRepository gameRepository;
+
+    @Mock
+    private TableCheckerPort tableCheckerPort;
 
     @InjectMocks
     private GameApplicationService gameApplicationService;
@@ -50,14 +54,17 @@ class GameApplicationServiceTest {
     }
 
     @Test
-    void createGame_ShouldCreateGame() {
+    void createGame_ShouldCreateGame_WhenTableExists() {
         String player = "player1";
-        String table = "table1";
+        String table = "existingTable";
         LocalDateTime startDateTime = LocalDateTime.now();
         Duration duration = Duration.ofMinutes(60);
 
         Mockito.when(gameRepository.saveGame(any(Game.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
+
+        Mockito.when(tableCheckerPort.tableExists(table))
+                .thenReturn(true);
 
         Game response = gameApplicationService.createGame(player, table, startDateTime, duration);
 
@@ -68,6 +75,22 @@ class GameApplicationServiceTest {
         assertEquals(duration, response.getSchedule().getDuration());
 
         verify(gameRepository, times(1)).saveGame(any());
+        verify(tableCheckerPort, times(1)).tableExists(table);
+    }
+
+    @Test
+    void createGame_ShouldNotCreateGame_WhenTableNotExists() {
+        String player = "player1";
+        String table = "nonExistingTable";
+        LocalDateTime startDateTime = LocalDateTime.now();
+        Duration duration = Duration.ofMinutes(60);
+
+        Mockito.when(tableCheckerPort.tableExists(table))
+                .thenReturn(false);
+
+        assertThrows(IllegalArgumentException.class, () -> gameApplicationService.createGame(player, table, startDateTime, duration));
+
+        verify(tableCheckerPort, times(1)).tableExists(table);
     }
 
     @Test
