@@ -31,4 +31,9 @@ public class MongoTableRepository implements com.jraporta.table_manager.domain.p
                 .orElseThrow(() -> new TableNotFoundException(String.format("No table found with id: %s", id)))
                 .toDomain();
     }
+
+    @Override
+    public boolean tableExists(String id) {
+        return springMongoTableRepository.existsById(id);
+    }
 }
