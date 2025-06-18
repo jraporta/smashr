@@ -20,20 +20,20 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class GameServiceTest {
+class GameApplicationServiceTest {
 
     @Mock
     private GameRepository gameRepository;
 
     @InjectMocks
-    private GameService gameService;
+    private GameApplicationService gameApplicationService;
 
     @ParameterizedTest
     @MethodSource("provideGameLists")
     void getAllGames_ShouldHandleVariousScenarios(List<Game> games) {
         Mockito.when(gameRepository.findAll()).thenReturn(games);
 
-        List<Game> response = gameService.getAllGames();
+        List<Game> response = gameApplicationService.getAllGames();
 
         assertEquals(games, response);
     }
@@ -59,7 +59,7 @@ class GameServiceTest {
         Mockito.when(gameRepository.saveGame(any(Game.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        Game response = gameService.createGame(player, table, startDateTime, duration);
+        Game response = gameApplicationService.createGame(player, table, startDateTime, duration);
 
         assertNotNull(response);
         assertTrue(response.getPlayers().getPlayers().contains(player));
@@ -77,7 +77,7 @@ class GameServiceTest {
 
         Mockito.when(gameRepository.findGame(gameId)).thenReturn(expectedResponse);
 
-        assertEquals(expectedResponse, gameService.getGame(gameId));
+        assertEquals(expectedResponse, gameApplicationService.getGame(gameId));
 
         verify(gameRepository, times(1)).findGame(gameId);
     }

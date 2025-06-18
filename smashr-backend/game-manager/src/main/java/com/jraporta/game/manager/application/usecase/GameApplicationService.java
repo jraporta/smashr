@@ -2,6 +2,7 @@ package com.jraporta.game.manager.application.usecase;
 
 import com.jraporta.game.manager.domain.model.game.Game;
 import com.jraporta.game.manager.domain.port.out.GameRepository;
+import com.jraporta.game.manager.domain.service.GameService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +12,10 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class GameService implements GameUseCase{
+public class GameApplicationService implements GameUseCase{
 
     private final GameRepository gameRepository;
+    private final GameService gameService;
 
     @Override
     public List<Game> getAllGames() {
@@ -22,7 +24,7 @@ public class GameService implements GameUseCase{
 
     @Override
     public Game createGame(String playerId, String table, LocalDateTime startDateTime, Duration duration) {
-        Game game = Game.create(playerId, table, startDateTime, duration);
+        Game game = gameService.createGame(playerId, table, startDateTime, duration);
         return gameRepository.saveGame(game);
     }
 
