@@ -2,7 +2,7 @@ package com.jraporta.game.manager.application.usecase;
 
 import com.jraporta.game.manager.domain.model.game.Game;
 import com.jraporta.game.manager.domain.port.out.GameRepository;
-import com.jraporta.game.manager.domain.service.GameService;
+import com.jraporta.game.manager.domain.port.out.TableCheckerPort;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class GameApplicationService implements GameUseCase{
 
     private final GameRepository gameRepository;
-    private final GameService gameService;
+    private final TableCheckerPort tableCheckerPort;
 
     @Override
     public List<Game> getAllGames() {
@@ -23,8 +23,11 @@ public class GameApplicationService implements GameUseCase{
     }
 
     @Override
-    public Game createGame(String playerId, String table, LocalDateTime startDateTime, Duration duration) {
-        Game game = gameService.createGame(playerId, table, startDateTime, duration);
+    public Game createGame(String playerId, String tableid, LocalDateTime startDateTime, Duration duration) {
+        if (!tableCheckerPort.tableExists(tableid)) {
+            throw new IllegalArgumentException("Table does not exist");
+        }
+        Game game = Game.create(playerId, tableid, startDateTime, duration);
         return gameRepository.saveGame(game);
     }
 
