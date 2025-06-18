@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.jraporta.technical.api.proto";
+option java_outer_classname = "table";
+
+package table;
+
+service TableService {
+  rpc CheckTableExists(TableCheckRequest) returns (TableCheckReply) {}
+}
+
+message TableCheckRequest {
+  string table_id = 1;
+}
+
+message TableCheckReply {
+  bool exists = 1;
+}
