@@ -3,6 +3,7 @@ package com.jraporta.game.manager.application.usecase;
 import com.jraporta.game.manager.domain.model.game.Game;
 import com.jraporta.game.manager.domain.port.out.GameRepository;
 import com.jraporta.game.manager.domain.port.out.TableCheckerPort;
+import com.jraporta.game.manager.domain.port.out.UserCheckerPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,6 +29,9 @@ class GameApplicationServiceTest {
 
     @Mock
     private TableCheckerPort tableCheckerPort;
+
+    @Mock
+    private UserCheckerPort userCheckerPort;
 
     @InjectMocks
     private GameApplicationService gameApplicationService;
@@ -55,7 +59,7 @@ class GameApplicationServiceTest {
 
     @Test
     void createGame_ShouldCreateGame_WhenTableExists() {
-        String player = "player1";
+        String player = "existingPlayer";
         String table = "existingTable";
         LocalDateTime startDateTime = LocalDateTime.now();
         Duration duration = Duration.ofMinutes(60);
@@ -64,6 +68,8 @@ class GameApplicationServiceTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         Mockito.when(tableCheckerPort.tableExists(table))
+                .thenReturn(true);
+        Mockito.when(userCheckerPort.userExists(player))
                 .thenReturn(true);
 
         Game response = gameApplicationService.createGame(player, table, startDateTime, duration);
@@ -76,6 +82,7 @@ class GameApplicationServiceTest {
 
         verify(gameRepository, times(1)).saveGame(any());
         verify(tableCheckerPort, times(1)).tableExists(table);
+        verify(userCheckerPort, times(1)).userExists(player);
     }
 
     @Test
@@ -91,6 +98,23 @@ class GameApplicationServiceTest {
         assertThrows(IllegalArgumentException.class, () -> gameApplicationService.createGame(player, table, startDateTime, duration));
 
         verify(tableCheckerPort, times(1)).tableExists(table);
+    }
+
+    @Test
+    void createGame_ShouldNotCreateGame_WhenUserNotExists() {
+        String player = "nonExistingUser";
+        String table = "table1";
+        LocalDateTime startDateTime = LocalDateTime.now();
+        Duration duration = Duration.ofMinutes(60);
+
+        Mockito.when(tableCheckerPort.tableExists(table))
+                .thenReturn(true);
+        Mockito.when(userCheckerPort.userExists(player))
+                .thenReturn(false);
+
+        assertThrows(IllegalArgumentException.class, () -> gameApplicationService.createGame(player, table, startDateTime, duration));
+
+        verify(userCheckerPort, times(1)).userExists(player);
     }
 
     @Test
