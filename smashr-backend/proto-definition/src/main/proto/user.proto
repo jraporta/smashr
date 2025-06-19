@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.jraporta.technical.api.proto";
+option java_outer_classname = "user";
+
+package user;
+
+service UserService {
+  rpc CheckUserExists(UserCheckRequest) returns (UserCheckReply) {}
+}
+
+message UserCheckRequest {
+  string user_id = 1;
+}
+
+message UserCheckReply {
+  bool exists = 1;
+}
