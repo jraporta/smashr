@@ -91,4 +91,29 @@ class MongoGameRepositoryTest {
 
         verify(springMongoGameRepository, times(1)).findById(gameId1);
     }
+
+    @Test
+    void getGamesFiltered_ShouldMapDocumentsToGames() {
+        String tableId = "tableId";
+        when(springMongoGameRepository.findAllByTable(tableId)).thenReturn(List.of(gameDoc1));
+
+        List<Game> result = mongoGameRepository.getGamesFiltered(tableId, null, null);
+
+        assertEquals(1, result.size());
+        assertEquals(gameDoc1.toDomain(), result.getFirst());
+
+        verify(springMongoGameRepository, times(1)).findAllByTable(tableId);
+    }
+
+    @Test
+    void getGamesFiltered_ShouldReturnEmptyList_WhenNoGamesFound() {
+        String tableId = "tableId";
+        when(springMongoGameRepository.findAllByTable(tableId)).thenReturn(List.of());
+
+        List<Game> result = mongoGameRepository.getGamesFiltered(tableId, null, null);
+
+        assertTrue(result.isEmpty());
+
+        verify(springMongoGameRepository, times(1)).findAllByTable(tableId);
+    }
 }

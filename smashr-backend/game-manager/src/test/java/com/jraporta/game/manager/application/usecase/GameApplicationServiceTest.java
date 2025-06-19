@@ -44,6 +44,19 @@ class GameApplicationServiceTest {
         List<Game> response = gameApplicationService.getAllGames();
 
         assertEquals(games, response);
+        verify(gameRepository, times(1)).findAll();
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideGameLists")
+    void getGamesFiltered_ShouldHandleVariousScenarios(List<Game> games) {
+        String tableId = "tableId";
+        Mockito.when(gameRepository.getGamesFiltered(tableId, null, null)).thenReturn(games);
+
+        List<Game> response = gameApplicationService.getGamesFiltered(tableId, null, null);
+
+        assertEquals(games, response);
+        verify(gameRepository, times(1)).getGamesFiltered(tableId, null, null);
     }
 
     public static Stream<List<Game>> provideGameLists() {

@@ -58,7 +58,7 @@ class GameControllerTest {
 
     @ParameterizedTest
     @MethodSource("provideGameLists")
-    void getAllGames_ShouldHandleVariousScenarios(List<Game> games) throws Exception {
+    void getAllGames_ShouldHandleVariousScenarios_WhenNoParametersProvided(List<Game> games) throws Exception {
         when(gameUseCase.getAllGames()).thenReturn(games);
 
         mockMvc.perform(get("/games"))
@@ -66,6 +66,19 @@ class GameControllerTest {
                 .andExpect(content().json(mapper.writeValueAsString(games), JsonCompareMode.STRICT));
 
         verify(gameUseCase, times(1)).getAllGames();
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideGameLists")
+    void getAllGames_ShouldHandleVariousScenarios_WhenTableIdParameterProvided(List<Game> games) throws Exception {
+        String tableId = "table1";
+        when(gameUseCase.getGamesFiltered(tableId, null, null)).thenReturn(games);
+
+        mockMvc.perform(get("/games").param("tableId", tableId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(mapper.writeValueAsString(games), JsonCompareMode.STRICT));
+
+        verify(gameUseCase, times(1)).getGamesFiltered(tableId, null, null);
     }
 
     public static Stream<List<Game>> provideGameLists() {
