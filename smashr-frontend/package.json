@@ -14,6 +14,9 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.8",
     "axios": "^1.9.0",
+    "date-fns": "^4.1.0",
+    "iso8601-duration": "^2.1.2",
+    "lucide-react": "^0.518.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.3",
