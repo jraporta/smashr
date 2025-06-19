@@ -40,4 +40,9 @@ public class GameApplicationService implements GameUseCase{
     public Game getGame(String id) {
         return gameRepository.findGame(id);
     }
+
+    @Override
+    public List<Game> getGamesFiltered(String tableId, LocalDateTime from, LocalDateTime to) {
+        return gameRepository.getGamesFiltered(tableId, from, to);
+    }
 }

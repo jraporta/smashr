@@ -5,9 +5,11 @@ import com.jraporta.game.manager.application.usecase.GameUseCase;
 import com.jraporta.game.manager.domain.model.game.Game;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -17,8 +19,14 @@ public class GameController {
     private final GameUseCase gameUseCase;
 
     @GetMapping("/games")
-    public ResponseEntity<List<Game>> getAllGames() {
-        return ResponseEntity.ok(gameUseCase.getAllGames());
+    public ResponseEntity<List<Game>> getAllGames(
+            @RequestParam(required = false) String tableId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
+        return ResponseEntity.ok(
+                tableId == null && from == null && to == null ?
+                        gameUseCase.getAllGames():
+                        gameUseCase.getGamesFiltered(tableId, from, to));
     }
 
     @GetMapping("/games/{id}")

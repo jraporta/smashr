@@ -11,5 +11,5 @@ public interface GameUseCase {
     List<Game> getAllGames();
     Game createGame(String playerId, String table, LocalDateTime startDateTime, Duration duration);
     Game getGame(String id);
-
+    List<Game> getGamesFiltered(String tableId, LocalDateTime from, LocalDateTime to);
 }

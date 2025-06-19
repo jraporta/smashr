@@ -5,6 +5,7 @@ import com.jraporta.game.manager.domain.port.out.GameRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -29,6 +30,11 @@ public class MongoGameRepository implements GameRepository {
     @Override
     public Game findGame(String id) {
         return springMongoGameRepository.findById(id).orElseThrow().toDomain();
+    }
+
+    @Override
+    public List<Game> getGamesFiltered(String tableId, LocalDateTime from, LocalDateTime to) {
+        return springMongoGameRepository.findAllByTable(tableId).stream().map(GameDocument::toDomain).toList();
     }
 
 }
