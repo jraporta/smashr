@@ -7,5 +7,6 @@ import java.util.Optional;
 public interface UserRepository {
 
     Optional<User> findByEmailOrUsername(String username);
+    boolean userExists(String userId);
 
 }
