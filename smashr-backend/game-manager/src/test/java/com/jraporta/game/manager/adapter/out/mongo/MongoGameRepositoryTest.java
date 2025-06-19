@@ -34,7 +34,8 @@ class MongoGameRepositoryTest {
         gameDoc1 = new GameDocument(
                 gameId1,
                 "tableId",
-                new GamePlayers("playerId", GameType.SINGLES),
+                List.of("playerId"),
+                GameType.SINGLES,
                 new GameSchedule(LocalDateTime.now(), Duration.ofMinutes(60)),
                 GameStatus.WAITING_FOR_PLAYERS,
                 null
