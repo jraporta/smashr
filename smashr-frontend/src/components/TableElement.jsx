@@ -1,4 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import slugify from "slugify";
 
 const StarRating = ({ rating, reviews }) => (
   <span className="flex gap-2 mt-2">
@@ -21,16 +23,21 @@ const StarRating = ({ rating, reviews }) => (
   </span>
 );
 
-const CheckGamesButton = ({ fullWidth = false }) => (
-  <button
-    type="button"
-    className={`rounded-lg bg-pink-500 px-3 py-2 text-sm font-bold text-white ${
-      fullWidth ? "w-full" : "w-60"
-    }`}
-  >
-    Check games
-  </button>
-);
+const CheckGamesButton = ({ fullWidth = false, table }) => {
+  const navigate = useNavigate();
+
+  return (
+    <button
+      type="button"
+      className={`cursor-pointer rounded-lg bg-pink-500 px-3 py-2 text-sm font-bold text-white ${
+        fullWidth ? "w-full" : "w-60"
+      }`}
+      onClick={() => navigate(`/tables/${table.id}/${slugify(table.name, { lower:true })}/games`)}
+    >
+      Check games
+    </button>
+  );
+};
 
 const ImageGallery = ({ images }) => {
   console.log("Is of type " + typeof images);
@@ -120,11 +127,11 @@ function TableElement({ table }) {
             <Description text={table.description} />
 
             <div className="mt-6 hidden lg:block">
-              <CheckGamesButton />
+              <CheckGamesButton table={table}/>
             </div>
 
             <div className="block lg:hidden mt-4">
-              <CheckGamesButton fullWidth />
+              <CheckGamesButton fullWidth table={table} />
             </div>
           </div>
 
