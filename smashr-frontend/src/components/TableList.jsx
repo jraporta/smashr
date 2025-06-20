@@ -7,7 +7,7 @@ function TableListElement({ table }) {
 
     return (
         <h2
-            className="w-2xs p-3 m-3 rounded-full border-1 border-l-stone-800 text-center"
+            className="cursor-pointer w-2xs p-3 m-3 rounded-full border-1 border-l-stone-800 text-center"
             onClick={() => navigate("/tables/" + table.id + "/" + slugify(table.name, { lower:true }))}
             >{table.name}
         </h2>
