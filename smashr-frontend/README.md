@@ -27,7 +27,7 @@ Follow the steps below to run this project locally.
 
 ### 🏃‍♂️ Running the Dev Server
 
-Start the development server:
+1. Start the development server:
 
     ```
     npm run dev
