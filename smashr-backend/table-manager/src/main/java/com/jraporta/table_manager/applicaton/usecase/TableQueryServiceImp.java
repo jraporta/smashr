@@ -1,5 +1,6 @@
 package com.jraporta.table_manager.applicaton.usecase;
 
+import com.jraporta.table_manager.domain.model.table.Table;
 import com.jraporta.table_manager.domain.port.out.TableRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,4 +16,8 @@ public class TableQueryServiceImp implements TableQueryService{
         return tableRepository.tableExists(tableId);
     }
 
+    @Override
+    public Table getTable(String tableId) {
+        return tableRepository.findTable(tableId);
+    }
 }
