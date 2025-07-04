@@ -1,5 +1,8 @@
 package com.jraporta.game.manager.application.usecase;
 
+import com.jraporta.game.manager.application.model.GameDetails;
+import com.jraporta.game.manager.application.port.out.TableQueryService;
+import com.jraporta.game.manager.application.model.TableDetails;
 import com.jraporta.game.manager.domain.model.game.Game;
 import com.jraporta.game.manager.domain.port.out.GameRepository;
 import com.jraporta.game.manager.domain.port.out.TableCheckerPort;
@@ -18,6 +21,7 @@ public class GameApplicationService implements GameUseCase{
     private final GameRepository gameRepository;
     private final TableCheckerPort tableCheckerPort;
     private final UserCheckerPort userCheckerPort;
+    private final TableQueryService tableQueryService;
 
     @Override
     public List<Game> getAllGames() {
@@ -37,8 +41,10 @@ public class GameApplicationService implements GameUseCase{
     }
 
     @Override
-    public Game getGame(String id) {
-        return gameRepository.findGame(id);
+    public GameDetails getGame(String id) {
+        Game game = gameRepository.findGame(id);
+        TableDetails tableDetails = tableQueryService.getTableDetails(game.getTable());
+        return new GameDetails(game, tableDetails);
     }
 
     @Override

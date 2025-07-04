@@ -1,5 +1,6 @@
 package com.jraporta.game.manager.application.usecase;
 
+import com.jraporta.game.manager.application.model.GameDetails;
 import com.jraporta.game.manager.domain.model.game.Game;
 
 import java.time.Duration;
@@ -10,6 +11,6 @@ public interface GameUseCase {
 
     List<Game> getAllGames();
     Game createGame(String playerId, String table, LocalDateTime startDateTime, Duration duration);
-    Game getGame(String id);
+    GameDetails getGame(String id);
     List<Game> getGamesFiltered(String tableId, LocalDateTime from, LocalDateTime to);
 }
