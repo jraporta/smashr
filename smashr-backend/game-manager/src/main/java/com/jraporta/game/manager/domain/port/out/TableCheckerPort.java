@@ -4,5 +4,4 @@ public interface TableCheckerPort {
 
     boolean tableExists(String tableId);
 
-    String getTableDetails(String table);
 }
