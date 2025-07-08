@@ -1,5 +1,9 @@
 package com.jraporta.game.manager.application.usecase;
 
+import com.jraporta.game.manager.application.exception.GameDetailsLoadException;
+import com.jraporta.game.manager.application.exception.GameNotFoundException;
+import com.jraporta.game.manager.application.exception.QueryServiceInternalException;
+import com.jraporta.game.manager.application.exception.TableNotFoundException;
 import com.jraporta.game.manager.application.model.GameDetails;
 import com.jraporta.game.manager.application.port.out.TableQueryService;
 import com.jraporta.game.manager.application.model.TableDetails;
@@ -8,6 +12,7 @@ import com.jraporta.game.manager.domain.port.out.GameRepository;
 import com.jraporta.game.manager.domain.port.out.TableCheckerPort;
 import com.jraporta.game.manager.domain.port.out.UserCheckerPort;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -16,6 +21,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class GameApplicationService implements GameUseCase{
 
     private final GameRepository gameRepository;
@@ -41,9 +47,20 @@ public class GameApplicationService implements GameUseCase{
     }
 
     @Override
-    public GameDetails getGame(String id) {
-        Game game = gameRepository.findGame(id);
-        TableDetails tableDetails = tableQueryService.getTableDetails(game.getTable());
+    public GameDetails getGame(String gameId) {
+        Game game = gameRepository.findGame(gameId)
+                .orElseThrow(() -> {
+                    log.warn("Game with id {} not found", gameId);
+                    return new GameNotFoundException("Game with id " + gameId + " not found");
+                });
+
+        TableDetails tableDetails;
+        try {
+            tableDetails = tableQueryService.getTableDetails(game.getTable());
+        } catch (TableNotFoundException | QueryServiceInternalException ex) {
+            log.error("Failed to load table details for game {}: {}", gameId, ex.getMessage(), ex);
+            throw new GameDetailsLoadException("Unable to load table details for game " + gameId);
+        }
         return new GameDetails(game, tableDetails);
     }
 
