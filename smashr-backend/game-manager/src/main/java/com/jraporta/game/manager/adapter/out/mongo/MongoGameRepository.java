@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Repository
@@ -28,8 +29,8 @@ public class MongoGameRepository implements GameRepository {
     }
 
     @Override
-    public Game findGame(String id) {
-        return springMongoGameRepository.findById(id).orElseThrow().toDomain();
+    public Optional<Game> findGame(String id) {
+        return springMongoGameRepository.findById(id).map(GameDocument::toDomain);
     }
 
     @Override

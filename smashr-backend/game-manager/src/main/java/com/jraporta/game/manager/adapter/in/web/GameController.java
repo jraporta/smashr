@@ -1,6 +1,7 @@
 package com.jraporta.game.manager.adapter.in.web;
 
 import com.jraporta.game.manager.adapter.in.web.dto.request.CreateGameRequest;
+import com.jraporta.game.manager.application.model.GameDetails;
 import com.jraporta.game.manager.application.usecase.GameUseCase;
 import com.jraporta.game.manager.domain.model.game.Game;
 import jakarta.validation.Valid;
@@ -30,7 +31,7 @@ public class GameController {
     }
 
     @GetMapping("/games/{id}")
-    public ResponseEntity<Game> getGame(@PathVariable String id) {
+    public ResponseEntity<GameDetails> getGame(@PathVariable String id) {
         return ResponseEntity.ok(gameUseCase.getGame(id));
     }
 

@@ -3,6 +3,10 @@ package com.jraporta.game.manager.adapter.in.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.jraporta.game.manager.adapter.in.web.dto.request.CreateGameRequest;
+import com.jraporta.game.manager.application.exception.GameDetailsLoadException;
+import com.jraporta.game.manager.application.exception.GameNotFoundException;
+import com.jraporta.game.manager.application.model.GameDetails;
+import com.jraporta.game.manager.application.model.TableDetails;
 import com.jraporta.game.manager.application.usecase.GameUseCase;
 import com.jraporta.game.manager.domain.model.game.Game;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +27,6 @@ import org.springframework.web.util.UriTemplate;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -92,15 +95,18 @@ class GameControllerTest {
     }
 
     @Test
-    void getGame_WhenValidId_ShouldReturnGame() throws Exception {
+    void getGame_WhenValidId_ShouldReturnGameDetails() throws Exception {
         String id = "ValidId";
-        Game game1 = Game.create("player1", "table1", LocalDateTime.now(), Duration.ofMinutes(60));
+        GameDetails gameDetails = new GameDetails(
+                Game.create("player1", "tableId", LocalDateTime.now(), Duration.ofMinutes(60)),
+                new TableDetails("tableId", "tableName", "tableDescription")
+        );
 
-        when(gameUseCase.getGame(id)).thenReturn(game1);
+        when(gameUseCase.getGame(id)).thenReturn(gameDetails);
 
         mockMvc.perform(get(new UriTemplate("/games/{id}").expand(id)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(game1), JsonCompareMode.STRICT));
+                .andExpect(content().json(mapper.writeValueAsString(gameDetails), JsonCompareMode.STRICT));
 
         verify(gameUseCase, times(1)).getGame(id);
     }
@@ -109,10 +115,22 @@ class GameControllerTest {
     void getGame_WhenNoGameWithGivenId_ShouldReturn404Response() throws Exception {
         String id = "NonExistingGame";
 
-        when(gameUseCase.getGame(id)).thenThrow(new NoSuchElementException());
+        when(gameUseCase.getGame(id)).thenThrow(new GameNotFoundException("message"));
 
         mockMvc.perform(get(new UriTemplate("/games/{id}").expand(id)))
                 .andExpect(status().isNotFound());
+
+        verify(gameUseCase, times(1)).getGame(id);
+    }
+
+    @Test
+    void getGame_WhenGameDetailsLoadError_ShouldReturn500Response() throws Exception {
+        String id = "existingGame";
+
+        when(gameUseCase.getGame(id)).thenThrow(new GameDetailsLoadException("message"));
+
+        mockMvc.perform(get(new UriTemplate("/games/{id}").expand(id)))
+                .andExpect(status().isInternalServerError());
 
         verify(gameUseCase, times(1)).getGame(id);
     }
