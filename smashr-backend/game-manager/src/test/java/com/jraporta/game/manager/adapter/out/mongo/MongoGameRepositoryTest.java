@@ -78,7 +78,7 @@ class MongoGameRepositoryTest {
     void findGame_IfExists_ShouldReturnGame() {
         when(springMongoGameRepository.findById(gameId1)).thenReturn(Optional.of(gameDoc1));
 
-        assertEquals(gameDoc1.toDomain(), mongoGameRepository.findGame(gameId1));
+        assertEquals(gameDoc1.toDomain(), mongoGameRepository.findGame(gameId1).orElseThrow());
 
         verify(springMongoGameRepository, times(1)).findById(gameId1);
     }
